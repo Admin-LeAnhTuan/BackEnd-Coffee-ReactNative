@@ -7,15 +7,16 @@ import {
     deleteOrderById,
     createPayment
 } from "../controller/Order.controller";
+import { isAuthenticated, isAdminAuthenticated } from "../middleware/IsAuthen.middleware";
 
 const router = express.Router();
 
-router.get("/", getAllOrder);
-router.post("/create", createOrder);
+router.get("/",isAuthenticated, getAllOrder);
+router.post("/create",isAuthenticated, createOrder);
 router.get("/:id", getOrderById);
-router.put("/:id", updateOrderById);
-router.put("/:id", updateOrderById);
-router.delete("/:id", deleteOrderById);
-router.post("/createPayment", createPayment)
+router.put("/:id",isAdminAuthenticated, updateOrderById);
+router.put("/:id",isAuthenticated, updateOrderById);
+router.delete("/:id",isAdminAuthenticated, deleteOrderById);
+router.post("/createPayment",isAuthenticated, createPayment)
 
 export default router;

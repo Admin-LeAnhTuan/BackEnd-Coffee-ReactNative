@@ -6,14 +6,16 @@ import {
     updateUserById,
     deleteUserById
 } from "../controller/User.controller";
-// import { upload } from "../utils/Multer.utils";
+import { isAdminAuthenticated, isAuthenticated } from "../middleware/IsAuthen.middleware";
+import { upload } from "../utils/Multer.utils";
+
 
 const router = express.Router();
 
-router.get("/", getAllUser);
+router.get("/",isAdminAuthenticated, getAllUser);
 router.post("/create", createUser);
-router.get("/:id", getUserById);
-router.put("/:id", updateUserById);
-router.delete("/:id", deleteUserById);
+router.get("/:id",isAdminAuthenticated, getUserById);
+router.put("/:id",isAuthenticated, upload.single("avatar"), updateUserById);
+router.delete("/:id",isAdminAuthenticated, deleteUserById);
 
 export default router;

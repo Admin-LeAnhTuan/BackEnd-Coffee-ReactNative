@@ -9,15 +9,16 @@ import {
     findProductByName
 } from "../controller/Product.controller";
 import { upload } from "../utils/Multer.utils";
+import { isAuthenticated, isAdminAuthenticated } from "../middleware/IsAuthen.middleware";
 
 const router = express.Router();
 
-router.get("/", getAllProduct); 
-router.post("/create", upload.single("image"), createProduct);
-router.get("/:id", getProductById);
-router.put("/:id", updateProductById);
-router.get("/name/:name", findProductByName);
-router.get("/category/:id", findProductByCateogry);
-router.delete("/:id", deleteOrderById);
+router.get("/",isAuthenticated, getAllProduct); 
+router.post("/create",isAdminAuthenticated, upload.single("image"), createProduct);
+router.get("/:id",isAuthenticated, getProductById);
+router.put("/:id",isAdminAuthenticated, updateProductById);
+router.get("/name/:name",isAuthenticated, findProductByName);
+router.get("/category/:id",isAuthenticated, findProductByCateogry);
+router.delete("/:id",isAdminAuthenticated, deleteOrderById);
 
 export default router;

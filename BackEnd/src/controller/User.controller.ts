@@ -46,9 +46,16 @@ export const getUserById = async (req: Request, res: Response) => {
 // Update user by ID
 export const updateUserById = async (req: Request, res: Response) => {
     try {
+    const {address, name, phoneNumber,  } = req.body;
+    const avatar: any = req.file;
     const updatedUser = await User.findByIdAndUpdate(
         req.params.id,
-        req.body,
+        {
+            name: name,
+            phoneNumber: phoneNumber,
+            address: address, 
+            avatar: avatar.location
+        },
         { new: true }
     ).exec();
     if (updatedUser) {

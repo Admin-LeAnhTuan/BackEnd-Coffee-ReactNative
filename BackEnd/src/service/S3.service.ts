@@ -4,7 +4,7 @@ const bucketRegion: string = process.env.S3_BUCKET_REGION || "";
 const accessKey: string = process.env.S3_ACCESS_KEY || "";
 const secretAccessKey: string = process.env.S3_SECRET_ACCESS_KEY || "";
 
-console.log(process.env.PORT)
+// console.log(process.env.PORT)
 
 const s3Config: S3ClientConfig = {
     credentials: {
