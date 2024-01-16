@@ -7,6 +7,7 @@ export interface PaymentDocument extends Document{
     users: mongoose.Types.ObjectId,
     orders: mongoose.Types.ObjectId,
     createAt: Date,
+    isDelete: Boolean,
 }
 
 export interface PaymentModel extends Model<PaymentDocument>{}
@@ -36,6 +37,10 @@ const PaymentSchema = new Schema<PaymentDocument, PaymentModel>({
         type: Date,
         default: Date.now(),
     },
+    isDelete: {
+        type: Boolean,
+        default: false
+    }
 });
 
 export default mongoose.model<PaymentDocument, PaymentModel>("payment", PaymentSchema);

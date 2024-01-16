@@ -5,16 +5,12 @@ import Category from "../model/Category.model";
 
 export const createProduct = async (req: Request, res: Response): Promise<void> => {
     try {
-        const { nameProduct, description, price, categoryId, sizeIds, ingredientId } = req.body;
+        const { nameProduct, description, price, categoryId, ingredientId } = req.body;
     
         // Find the category by its ID
         const categoryObj = await Category.findById(categoryId).exec();
     
-        if (!Array.isArray(sizeIds)) {
-          throw new Error('Size IDs should be an array');
-        }
         const file: any = req.file
-        const sizeObjects = sizeIds.map((id: string) => ({ _id: id }));
         // Create the product object
         const product = new Product({
             nameProduct: nameProduct,
@@ -22,7 +18,7 @@ export const createProduct = async (req: Request, res: Response): Promise<void> 
             price: price,
             image: file.location,
             category: categoryObj ? categoryObj._id : null,
-            size: sizeObjects,
+            size: null,
             ingredient: ingredientId,
         });
     

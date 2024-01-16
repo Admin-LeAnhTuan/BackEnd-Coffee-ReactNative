@@ -3,6 +3,9 @@ import Order from '../model/Order.model';
 import User from "../model/User.model"
 import { FormatDateOrderId } from "../middleware/Format.middlewarre";
 const sortObject = require("sort-object");
+import queryString from "qs"
+import crypto from "crypto"
+import config from "config"
 
 // Create a new size
 export const createOrder = async (req: Request, res: Response) => {
@@ -180,7 +183,7 @@ export const createPayment = async (req:Request, res: Response, Next: NextFuncti
         var orderId: string = req.body.paymentInfo.orderId;
         var userId: string = req.body.paymentInfo.userId;
         var bankcode: string =  "";
-        var currCode: string = "USD";
+        var currCode: string = "VND";
         var VNP_Params: any = {};
         var vnp_Version: string = "2.1.0";
         var vnp_Command: string = "pay";
@@ -198,7 +201,7 @@ export const createPayment = async (req:Request, res: Response, Next: NextFuncti
         VNP_Params["vnp_TxnRef"] = orderId;
         VNP_Params["vnp_OrderInfo"] = orderDate;
         VNP_Params["vnp_OrderType"] = vnp_OrderType;
-        VNP_Params["vnp_Amount"] = amount * 100;
+        VNP_Params["vnp_Amount"] = amount * 100000;
         VNP_Params["vnp_ReturnUrl"] = ReturnUrl + `?orderId=${orderId}&userId=${userId}`;
         VNP_Params["vnp_IpAddr"] = ipAdr;
         VNP_Params["vnp_Locale"] = "vn";
@@ -246,6 +249,59 @@ export const createPayment = async (req:Request, res: Response, Next: NextFuncti
         res.status(500).json({ error: "Failed to updated order transport" });
     }
 }
+// success payment
+export const Payment_Success = async (req: Request, res: Response, next: NextFunction) =>{
+    var VNP_Params: any = req.body;
+    
+    var secureHash: string = VNP_Params["vnp_SecureHash"];
+    delete VNP_Params["vnp_SecureHash"];
+    delete VNP_Params["vnp_SecureHashType"];
+    var tmnCode: string = config.get("vnp_TmnCode");
+    var secretKey: string = config.get("vnp_HashSecret");
+
+    var singData = queryString.stringify(VNP_Params, {encode: true});
+
+    if(!secretKey) {
+      throw new Error('secretKey environment variable is not defined.');
+    }
+    
+    var hmac = crypto.createHmac("sha512",secretKey);
+    var signed = hmac.update(Buffer.from(singData, "utf-8")).digest("hex");
+    
+    if(secureHash === signed) {
+      // Kiem tra
+      res.render("success", {code: VNP_Params["vnp_ResponseCode"]});
+    } else {
+    res.render("success", {code: "97"});
+    }
+};
+
+
+export const Payment_VNP = async (req: Request, res: Response, next: NextFunction) => {
+    var vnp_Params = req.query;
+    var secureHash = vnp_Params["np_SecureHash"];
+  
+    delete vnp_Params["vnp_SecureHash"];
+    delete vnp_Params["vnp_SecureHashType"];
+  
+    var secretKey = process.env.VPN_HASHSECRET;
+    var signData = queryString.stringify(vnp_Params, {encode: false});
+    if(!secretKey) {
+      throw new Error('secretKey environment variable is not defined.');
+    }
+    var hmac = crypto.createHmac("sha512", secretKey);
+    var signed = hmac.update(Buffer.from(signData, "utf-8")).digest("hex");
+    if (secureHash === signed) {
+      var orderId = vnp_Params["vnp_TxnRef"];
+      var rspCode = vnp_Params["vnp_ResponseCode"];
+      //Kiem tra du lieu co hop le khong, cap nhat trang thai don hang va gui ket qua cho VNPAY theo dinh dang duoi
+      res.status(200).json({ RspCode: "00", Message: "success" });
+    } else {
+      res.status(200).json({ RspCode: "97", Message: "Fail checksum" });
+    }
+  
+}
+
 
 module.exports = {
     createOrder,
@@ -253,5 +309,6 @@ module.exports = {
     getOrderById,
     updateOrderById,
     deleteOrderById,
-    createPayment
+    createPayment,
+    Payment_VNP
 }

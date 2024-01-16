@@ -5,7 +5,8 @@ import {
     getOrderById,
     updateOrderById,
     deleteOrderById,
-    createPayment
+    createPayment,
+    Payment_VNP
 } from "../controller/Order.controller";
 import { isAuthenticated, isAdminAuthenticated } from "../middleware/IsAuthen.middleware";
 
@@ -18,5 +19,6 @@ router.put("/:id",isAdminAuthenticated, updateOrderById);
 router.put("/:id",isAuthenticated, updateOrderById);
 router.delete("/:id",isAdminAuthenticated, deleteOrderById);
 router.post("/createPayment",isAuthenticated, createPayment)
+router.get("/pay_ipn", Payment_VNP);
 
 export default router;

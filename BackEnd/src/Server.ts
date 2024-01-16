@@ -21,6 +21,7 @@ import catgoryRouter from "./Router/Category.router"
 import ingredientRouter from "./Router/Ingredient.router"
 import productRouter from "./Router/Product.router"
 import orderRouter from "./Router/Order.router"
+import paymentRouter from "./Router/Payment.router"
 
 const app = express();
 const port = process.env.PORT;
@@ -46,7 +47,7 @@ app.use("/size", sizeRouter)
 app.use("/product", productRouter)
 app.use("/order", orderRouter)
 // app.use("/wishList",)
-// app.use("/payment",)
+app.use("/payment", paymentRouter)
 app.use("/ingredient", ingredientRouter)
 
 ConnectDatabase();
