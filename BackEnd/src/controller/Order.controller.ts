@@ -7,6 +7,7 @@ import queryString from "qs"
 import crypto from "crypto"
 import config from "config"
 
+
 // Create a new size
 export const createOrder = async (req: Request, res: Response) => {
     try {
@@ -137,7 +138,7 @@ export const OrdertransportSuccess = async (req:Request, res: Response) => {
     }
 }
 
-// Payment
+// Payment with VNPay
 
 type ExpressResponse = Response<any>;
 
@@ -310,5 +311,5 @@ module.exports = {
     updateOrderById,
     deleteOrderById,
     createPayment,
-    Payment_VNP
+    Payment_VNP,
 }

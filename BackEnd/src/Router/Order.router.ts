@@ -6,7 +6,7 @@ import {
     updateOrderById,
     deleteOrderById,
     createPayment,
-    Payment_VNP
+    Payment_VNP,
 } from "../controller/Order.controller";
 import { isAuthenticated, isAdminAuthenticated } from "../middleware/IsAuthen.middleware";
 

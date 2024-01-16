@@ -6,9 +6,12 @@ import cookieParser from "cookie-parser"
 import compression from "compression"
 import dotenv from "dotenv"
 
+
 dotenv.config({
     path:"./config/.env"
 })
+
+
 
 
 const ConnectDatabase = require("./helper/Connection.helper");

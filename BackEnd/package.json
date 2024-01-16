@@ -24,6 +24,7 @@
     "@types/multer": "^1.4.11",
     "@types/multer-s3": "^3.0.3",
     "@types/nodemailer": "^6.4.14",
+    "axios": "^1.6.5",
     "base64url": "^3.0.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
@@ -39,6 +40,7 @@
     "multer-s3": "^3.0.1",
     "nodemailer": "^6.9.8",
     "nodemon": "^3.0.2",
+    "paypal-rest-sdk": "^1.8.1",
     "sort-object": "^3.0.3",
     "ts-node": "^10.9.2"
   }
